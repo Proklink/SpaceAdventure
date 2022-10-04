@@ -1,8 +1,7 @@
 import sys, pygame
-import bullet
-import alien
 
-def check_keydown_events(event, screen, ship, bullets):
+
+def check_keydown_events(event, ship):
     if event.key == pygame.K_e:
         ship.moving_right = True
     if event.key == pygame.K_q:
@@ -38,29 +37,21 @@ def check_keyup_events(event, ship):
     if event.key == pygame.K_SPACE:
         ship.shooting = False
 
-def check_events(screen, ship, bullets):
+def game_activation(stats):
+    if stats.game_active:
+        stats.game_active = False
+    else:
+        stats.game_active = True
+
+def check_events(ship, stats):
     """Respond to keypresses and mouse events."""
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, screen, ship, bullets)
+            check_keydown_events(event, ship)
+            if event.key == pygame.K_ESCAPE:
+                game_activation(stats)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
-
-def draw_screen(ai_settings, screen, ship, bullets, aliens, asteroids):
-    """Update images on the screen and flip to the new screen."""
-
-    screen.blit(ai_settings.bg, ai_settings.bg_rect)
-    ship.blitme()
-    
-    for alien in aliens:
-        alien.draw()
-
-    for ast in asteroids:
-        ast.draw()
-
-    bullets.draw(screen)
-    
-    pygame.display.flip()

@@ -15,9 +15,7 @@ def rotatePoint(self, angle, point, origin):
 
 def rotateRect(self, degrees):
     center = (self.rect.centerx, self.rect.centery)
-    print("origin topleft: ", self.collideRect.topleft)
     self.collideRect.topleft = self.rotatePoint(degrees, self.collideRect.topleft, center)
-    print("new topleft: ", self.collideRect.topleft)
     self.collideRect.topright = self.rotatePoint(degrees, self.collideRect.topright, center)
     self.collideRect.bottomleft = self.rotatePoint(degrees, self.collideRect.bottomleft, center)
     self.collideRect.bottomright = self.rotatePoint(degrees, self.collideRect.bottomright, center)

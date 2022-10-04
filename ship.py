@@ -9,34 +9,36 @@ import bullet
 
 class Ship(Sprite):
 
-    def __init__(self, screen, settings):
+    def __init__(self, screen, acceleration, max_speed, angle_speed, init_direction,
+                 image, max_health, health_height, health_bar_shift, lives_limit,
+                 damage, init_posx, init_posy):
         """Initialize the ship and set its starting position."""
         
         super(Ship, self).__init__()
 
-        self.settings = settings
-
         self.screen = screen
-        self.screen_rect = screen.get_rect()
 
-        self.acceleration = 0.05
+        self.acceleration = acceleration
         self.speed = 0
-        self.max_speed = 2
-        self.angle_speed = 1
-        self.current_direction = [0, -1]
+        self.max_speed = max_speed
+        self.angle_speed = angle_speed
+        self.current_direction = init_direction
         self.current_angle = 0
         
         # Load the ship image and get its rect.
-        self.image = load('images/ships/Ships3/ship1.png')
+        self.image = image.copy()
         self.rect = self.image.get_rect()
         self.image = smoothscale(self.image, (self.rect.width / 4, self.rect.height / 4))
         self.rect = self.image.get_rect()
 
         self.original = self.image.copy()
 
+        self.init_posx = init_posx
+        self.init_posy = init_posy
+
         # Start each new ship at the bottom center of the screen.
-        self.rect.centerx = self.screen_rect.centerx
-        self.rect.bottom = self.screen_rect.bottom - 10
+        self.rect.centerx = init_posx
+        self.rect.bottom = init_posx
 
         self.collideRect = self.rect.copy()
 
@@ -53,12 +55,21 @@ class Ship(Sprite):
         self.rotate_right = False
         self.rotate_left = False
 
-        self.health = 50
-        self.max_health = 50
-        self.health_height = 5
-        self.health_bar_shift = 6
+        self.health = max_health
+        self.max_health = max_health
+        self.health_height = health_height
+        self.health_bar_shift = health_bar_shift
 
         self.score = 0
+
+        self.lives_limit = lives_limit
+        self.damage = damage
+
+    def init_pos_ship(self):
+        """Center the ship on the screen."""
+
+        self.center = self.init_posx
+        self.rect.bottom = self.init_posy
 
     def draw_health_bar(self):
         if self.health < 0:
@@ -69,8 +80,8 @@ class Ship(Sprite):
         outline_rect = pygame.Rect(self.collideRect.left, self.collideRect.top - self.health_bar_shift, self.collideRect.width, self.health_height)
         fill_rect = pygame.Rect(self.collideRect.left, self.collideRect.top - self.health_bar_shift, fill, self.health_height)
 
-        pygame.draw.rect(self.screen, THECOLORS['red'], fill_rect)
-        pygame.draw.rect(self.screen, THECOLORS['white'], outline_rect, 1)
+        pygame.draw.rect(self.screen.screen, THECOLORS['red'], fill_rect)
+        pygame.draw.rect(self.screen.screen, THECOLORS['white'], outline_rect, 1)
         
     def update_direction(self):
         self.current_direction[0] = math.sin(math.radians(self.current_angle))
@@ -121,11 +132,11 @@ class Ship(Sprite):
         access_to_move_x = True
         access_to_move_y = True
 
-        if SRiNF.bottom >= self.settings.screen_height or \
+        if SRiNF.bottom >= self.screen.height or \
            SRiNF.top <= 0:
             access_to_move_y = False
         if SRiNF.left <= 0 or \
-           SRiNF.right >= self.settings.screen_width:
+           SRiNF.right >= self.screen.width:
             access_to_move_x = False
 
         return access_to_move_x, access_to_move_y
@@ -149,13 +160,10 @@ class Ship(Sprite):
         self.update_speed()
         access_to_move_x, access_to_move_y = self.update_collision_with_map()
         self.update_position(access_to_move_x, access_to_move_y)
-        if self.shooting:
-            bullet.fire_bullet(self.screen, self, bullets)
-        print("SCORE: ", self.score)
 
     def blitme(self):
         """Draw the ship at its current location."""
 
-        self.screen.blit(self.image, self.rect)
+        self.screen.screen.blit(self.image, self.rect)
         self.draw_health_bar()
         

@@ -8,25 +8,24 @@ from pygame.color import THECOLORS
 class Alien(Sprite):
     """A class to represent a single alien in the fleet."""
     
-    def __init__(self, ai_settings, screen):
+    def __init__(self, screen, image, max_health, health_height, health_bar_shift):
         """Initialize the alien and set its starting position."""
 
         super(Alien, self).__init__()
 
         self.screen = screen
-        self.ai_settings = ai_settings
 
         # Load the alien image and set its rect attribute.
-        self.image = load('images/ships/Ships1/RD1.png')
+        self.image = image.copy()
         self.rect = self.image.get_rect()
         self.image = smoothscale(self.image, (self.rect.width / 4, self.rect.height / 4))
         self.image = rotate(self.image, 180)
         self.rect = self.image.get_rect()
 
-        self.health = 500
-        self.max_health = 500
-        self.health_height = 5
-        self.health_bar_shift = 6
+        self.health = max_health
+        self.max_health = max_health
+        self.health_height = health_height
+        self.health_bar_shift = health_bar_shift
 
         # Start each new alien near the top left of the screen.
         self.rect.x = self.rect.width
@@ -53,17 +52,3 @@ class Alien(Sprite):
 
         self.screen.blit(self.image, self.rect)
         self.draw_health_bar()
-
-def create_fleet(ai_settings, screen, aliens):
-    """Create a full fleet of aliens."""
-    
-    alien = Alien(ai_settings, screen) #костыль
-    alien_width = alien.rect.width
-    available_space_x = ai_settings.screen_width - 2 * alien_width
-    number_aliens_x = int(available_space_x / (2 * alien_width))
-
-    for alien_number in range(number_aliens_x):
-        alien = Alien(ai_settings, screen)
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        aliens.add(alien)
