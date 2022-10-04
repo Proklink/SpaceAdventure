@@ -60,11 +60,14 @@ class Ship(Sprite):
         self.lives_limit = lives_limit
         self.damage = damage
 
+        self.frames_per_bullet = 20
+        self.frames = 0
+
     def init_pos_ship(self):
         """Center the ship on the screen."""
 
-        self.rect.centerx = self.init_posx
-        self.rect.centery = self.init_posy
+        self.rect.centerx = self.collideRect.centerx = self.init_posx
+        self.rect.centery = self.collideRect.centery = self.init_posy
 
     def draw_health_bar(self):
         if self.health < 0:
@@ -155,6 +158,9 @@ class Ship(Sprite):
         self.update_speed()
         access_to_move_x, access_to_move_y = self.update_collision_with_map()
         self.update_position(access_to_move_x, access_to_move_y)
+
+        if self.frames > 0:
+            self.frames -= 1
 
     def blitme(self):
         """Draw the ship at its current location."""

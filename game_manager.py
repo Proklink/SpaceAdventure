@@ -10,6 +10,7 @@ from time import sleep
 import random
 from pygame.color import THECOLORS
 from button import Button
+from scoreboard import Scoreboard
 
 
 class Manager():
@@ -17,6 +18,7 @@ class Manager():
         self.settings = settings
         self.screen = screen
         self.stats = GameStats(self.settings)
+        self.sb = Scoreboard(screen, self.stats)
 
         self.play_button = Button(self.settings, self.screen.screen, "Play", self.screen.width / 2, self.screen.height / 2)
         self.exit_button = Button(self.settings, self.screen.screen, "Exit", self.screen.width / 2, self.screen.height / 2 + 2 * 50)
@@ -40,8 +42,9 @@ class Manager():
         self.bullets = Group()
         self.aliens = Group()
         self.asteroids = Group()
+        self.stats.reset_stats()
 
-        self.create_fleet(self.settings.al_width)
+        # self.create_fleet(self.settings.al_width)
     
     def destroy_game(self):
         self.bullets.empty()
@@ -69,8 +72,9 @@ class Manager():
         pygame.display.flip()
 
     def ship_shooting(self):
-        if self.ship.shooting:  
+        if self.ship.shooting and self.ship.frames == 0:
             self.fire_bullet()
+            self.ship.frames = self.ship.frames_per_bullet
 
     def create_fleet(self, width):
         """Create a full fleet of aliens."""
@@ -100,7 +104,7 @@ class Manager():
         for bul in collisions:
             if collisions[bul][0].health <= bul.damage:
                 self.aliens.remove(collisions[bul][0])
-                self.ship.score += 1
+                self.stats.score += 1
             else:
                 collisions[bul][0].health -= bul.damage
 
@@ -108,7 +112,7 @@ class Manager():
         for bul in collisions:
             if collisions[bul][0].health <= bul.damage:
                 self.asteroids.remove(collisions[bul][0])
-                self.ship.score += 1
+                self.stats.score += 1
             else:
                 collisions[bul][0].health -= bul.damage 
 
@@ -139,6 +143,7 @@ class Manager():
         for ast in self.asteroids:
             ast.draw()
 
+        self.sb.show_scoreboard()
         self.bullets.draw(self.screen.screen)
 
     def draw_menu_screen(self):
@@ -187,9 +192,10 @@ class Manager():
 
     def ship_hit(self):
         """Respond to ship being hit by alien."""
-        if self.stats.ships_left > 0:
+        if self.stats.ships_left > 1:
             self.stats.ships_left -= 1
             self.ship.init_pos_ship()
+            self.ship.health = self.ship.max_health
             sleep(0.5)
         else:
             self.stats.game_active = False

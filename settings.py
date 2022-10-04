@@ -31,7 +31,7 @@ class Settings():
         self.sh_damage = 25
 
         self.sh_init_posx = self.scr_width / 2
-        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height - 10
+        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height / 2
         #ship settings end
 
         #alien settings start
