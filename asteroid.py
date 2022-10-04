@@ -1,4 +1,3 @@
-from pygame.image import load
 from pygame.sprite import Sprite
 from pygame.transform import rotate
 from pygame.transform import smoothscale

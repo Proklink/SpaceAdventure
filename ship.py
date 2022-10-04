@@ -1,11 +1,9 @@
-from pygame.image import load
 from pygame.transform import smoothscale
 from pygame.transform import rotate
 from pygame.sprite import Sprite
 import math
 from pygame.color import THECOLORS
 import pygame
-import bullet
 
 class Ship(Sprite):
 
@@ -30,7 +28,6 @@ class Ship(Sprite):
         self.rect = self.image.get_rect()
         self.image = smoothscale(self.image, (self.rect.width / 4, self.rect.height / 4))
         self.rect = self.image.get_rect()
-
         self.original = self.image.copy()
 
         self.init_posx = init_posx
@@ -38,7 +35,7 @@ class Ship(Sprite):
 
         # Start each new ship at the bottom center of the screen.
         self.rect.centerx = init_posx
-        self.rect.bottom = init_posx
+        self.rect.centery = init_posy
 
         self.collideRect = self.rect.copy()
 
@@ -60,16 +57,14 @@ class Ship(Sprite):
         self.health_height = health_height
         self.health_bar_shift = health_bar_shift
 
-        self.score = 0
-
         self.lives_limit = lives_limit
         self.damage = damage
 
     def init_pos_ship(self):
         """Center the ship on the screen."""
 
-        self.center = self.init_posx
-        self.rect.bottom = self.init_posy
+        self.rect.centerx = self.init_posx
+        self.rect.centery = self.init_posy
 
     def draw_health_bar(self):
         if self.health < 0:

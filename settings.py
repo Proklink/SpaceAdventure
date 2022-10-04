@@ -30,8 +30,8 @@ class Settings():
 
         self.sh_damage = 25
 
-        self.sh_init_posx = self.scr_image.get_rect().centerx
-        self.sh_init_posy = self.scr_image.get_rect().bottom - 10
+        self.sh_init_posx = self.scr_width / 2
+        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height - 10
         #ship settings end
 
         #alien settings start
@@ -55,7 +55,7 @@ class Settings():
 
         self.ast_init_rotation_angle = 180
 
-        self.ast_max_health = 500
+        self.ast_max_health = 50
         self.ast_health_height = 5
         self.ast_health_bar_shift = 6
         self.ast_speed = 1

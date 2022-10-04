@@ -17,7 +17,7 @@ class Bullet(Sprite):
         self.damage = damage
 
         self.image = image.copy().convert_alpha()
-        pygame.draw.ellipse(self.bul_image, self.bul_color, (0, 0, self.bul_width, self.bul_height))
+        pygame.draw.ellipse(self.image, self.color, (0, 0, self.bullet_width, self.bullet_height))
 
         self.direction = direction
 

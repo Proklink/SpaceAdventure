@@ -8,47 +8,67 @@ import game_events as ge
 from asteroid import Asteroid
 from time import sleep
 import random
+from pygame.color import THECOLORS
+from button import Button
 
 
 class Manager():
     def __init__(self, settings, screen):
-        self.ship = Ship(screen,
-                         settings.sh_acceleration,
-                         settings.sh_max_speed,
-                         settings.sh_angle_speed,
-                         settings.sh_init_diretion,
-                         settings.sh_image,
-                         settings.sh_max_health,
-                         settings.sh_health_bar_height,
-                         settings.sh_health_bar_shifty,
-                         settings.sh_lives_limit,
-                         settings.sh_damage,
-                         settings.sh_init_posx,
-                         settings.sh_init_posy)
+        self.settings = settings
+        self.screen = screen
+        self.stats = GameStats(self.settings)
+
+        self.play_button = Button(self.settings, self.screen.screen, "Play", self.screen.width / 2, self.screen.height / 2)
+        self.exit_button = Button(self.settings, self.screen.screen, "Exit", self.screen.width / 2, self.screen.height / 2 + 2 * 50)
+
+        self.init_game()
+
+    def init_game(self):
+        self.ship = Ship(self.screen,
+                         self.settings.sh_acceleration,
+                         self.settings.sh_max_speed,
+                         self.settings.sh_angle_speed,
+                         self.settings.sh_init_diretion,
+                         self.settings.sh_image,
+                         self.settings.sh_max_health,
+                         self.settings.sh_health_bar_height,
+                         self.settings.sh_health_bar_shifty,
+                         self.settings.sh_lives_limit,
+                         self.settings.sh_damage,
+                         self.settings.sh_init_posx,
+                         self.settings.sh_init_posy)
         self.bullets = Group()
         self.aliens = Group()
         self.asteroids = Group()
-        self.stats = GameStats(settings)
-        self.screen = screen
-        self.settings = settings
 
         self.create_fleet(self.settings.al_width)
+    
+    def destroy_game(self):
+        self.bullets.empty()
+        self.aliens.empty()
+        self.asteroids.empty()
 
     def events(self):
-        ge.check_events(self.ship, self.stats)
+        if self.stats.game_active:
+            ge.check_events_game_active(self, self.ship, self.stats)
+        else:
+            ge.check_events_game_inactive(self, self.stats)
     
     def update(self):
         if self.stats.game_active:
             self.ship.update(self.bullets)
+            self.ship_shooting()
             self.update_bullets()
             self.update_asteroids()
 
     def draw(self):
-        self.draw_screen()
+        if self.stats.game_active:
+            self.draw_game_screen()
+        else:
+            self.draw_menu_screen()
+        pygame.display.flip()
 
     def ship_shooting(self):
-        #костыль, тк проверяются данные корабля в классе менеджера
-        #оставлено в таком виде, чтобы не передавать в check_events объект менеджера
         if self.ship.shooting:  
             self.fire_bullet()
 
@@ -97,17 +117,17 @@ class Manager():
     def fire_bullet(self):
         bul = Bullet(self.screen.screen,
                      self.ship.current_direction.copy(),
-                     self.setting.bul_width,
-                     self.setting.bul_height,
-                     self.setting.bul_color,
-                     self.setting.bul_speed,
-                     self.setting.bul_damage,
-                     self.setting.bul_image,
+                     self.settings.bul_width,
+                     self.settings.bul_height,
+                     self.settings.bul_color,
+                     self.settings.bul_speed,
+                     self.settings.bul_damage,
+                     self.settings.bul_image,
                      self.ship.rect.centerx,
                      self.ship.rect.centery)
         self.bullets.add(bul)
 
-    def draw_screen(self):
+    def draw_game_screen(self):
         """Update images on the screen and flip to the new screen."""
 
         self.screen.screen.blit(self.screen.image, self.screen.rect)
@@ -119,9 +139,14 @@ class Manager():
         for ast in self.asteroids:
             ast.draw()
 
-        self.bullets.draw(self.screen)
-        
-        pygame.display.flip()
+        self.bullets.draw(self.screen.screen)
+
+    def draw_menu_screen(self):
+        self.screen.screen.blit(self.screen.image, self.screen.rect)
+        pygame.draw.rect(self.screen.screen, THECOLORS['black'], self.screen.rect)
+        self.play_button.draw_button()
+        self.exit_button.draw_button()
+
 
     def update_asteroids(self):
         if len(self.asteroids) == 0:
