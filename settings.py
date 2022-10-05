@@ -21,9 +21,9 @@ class Settings():
         self.sh_angle_speed = 1
         self.sh_init_diretion = [0, -1]
 
-        self.sh_speed = 4
+        self.sh_speed = 1
 
-        self.sh_max_health = 50
+        self.sh_max_health = 100
         self.sh_health_bar_height = 5
         self.sh_health_bar_shifty = 6
         self.sh_lives_limit = 3
@@ -55,7 +55,7 @@ class Settings():
 
         self.ast_init_rotation_angle = 180
 
-        self.ast_max_health = 50
+        self.ast_max_health = 25
         self.ast_health_height = 5
         self.ast_health_bar_shift = 6
         self.ast_speed = 1
@@ -63,8 +63,8 @@ class Settings():
         #alien settings end
 
         #bullet settings start
-        self.bul_width = 5
-        self.bul_height = 5
+        self.bul_width = 8
+        self.bul_height = 8
         self.bul_color = (255, 10, 10)
         self.bul_speed = 4
         self.bul_damage = 25

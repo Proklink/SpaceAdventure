@@ -11,6 +11,8 @@ import random
 from pygame.color import THECOLORS
 from button import Button
 from scoreboard import Scoreboard
+from directional_moving import directional_moving
+from left_right_moving import left_right_moving
 
 
 class Manager():
@@ -19,26 +21,36 @@ class Manager():
         self.screen = screen
         self.stats = GameStats(self.settings)
         self.sb = Scoreboard(screen, self.stats)
+        self.asters = True
 
         self.play_button = Button(self.settings, self.screen.screen, "Play", self.screen.width / 2, self.screen.height / 2)
         self.exit_button = Button(self.settings, self.screen.screen, "Exit", self.screen.width / 2, self.screen.height / 2 + 2 * 50)
-
+        
         self.init_game()
 
     def init_game(self):
         self.ship = Ship(self.screen,
-                         self.settings.sh_acceleration,
-                         self.settings.sh_max_speed,
-                         self.settings.sh_angle_speed,
-                         self.settings.sh_init_diretion,
                          self.settings.sh_image,
                          self.settings.sh_max_health,
                          self.settings.sh_health_bar_height,
                          self.settings.sh_health_bar_shifty,
                          self.settings.sh_lives_limit,
-                         self.settings.sh_damage,
-                         self.settings.sh_init_posx,
-                         self.settings.sh_init_posy)
+                         self.settings.sh_damage)
+        self.direct_moving = directional_moving(self.ship,
+                                                self.settings.sh_init_posx,
+                                                self.settings.sh_init_posy,
+                                                self.settings.sh_acceleration,
+                                                self.settings.sh_max_speed,
+                                                self.settings.sh_angle_speed,
+                                                self.settings.sh_init_diretion)
+
+        self.stright_moving = left_right_moving(self.ship,
+                                                self.settings.sh_init_posx,
+                                                self.settings.sh_init_posy,
+                                                self.settings.sh_speed)
+
+        self.ship.set_moving(self.stright_moving)
+
         self.bullets = Group()
         self.aliens = Group()
         self.asteroids = Group()
@@ -75,6 +87,12 @@ class Manager():
         if self.ship.shooting and self.ship.frames == 0:
             self.fire_bullet()
             self.ship.frames = self.ship.frames_per_bullet
+
+    def switch_moving(self):
+        if type(self.ship.moving_component) == directional_moving:
+            self.ship.set_moving(self.stright_moving)
+        else:
+            self.ship.set_moving(self.direct_moving)
 
     def create_fleet(self, width):
         """Create a full fleet of aliens."""
@@ -120,7 +138,7 @@ class Manager():
 
     def fire_bullet(self):
         bul = Bullet(self.screen.screen,
-                     self.ship.current_direction.copy(),
+                     self.ship.get_current_direction(),
                      self.settings.bul_width,
                      self.settings.bul_height,
                      self.settings.bul_color,
@@ -154,7 +172,7 @@ class Manager():
 
 
     def update_asteroids(self):
-        if len(self.asteroids) == 0:
+        if len(self.asteroids) == 0 and self.asters:
             self.generate_asters(self.settings.ast_width, self.settings.ast_height)
 
         for aster in self.asteroids.copy():
@@ -194,8 +212,9 @@ class Manager():
         """Respond to ship being hit by alien."""
         if self.stats.ships_left > 1:
             self.stats.ships_left -= 1
-            self.ship.init_pos_ship()
+            self.ship.reset_ship()
             self.ship.health = self.ship.max_health
+            self.asteroids.empty()
             sleep(0.5)
         else:
             self.stats.game_active = False

@@ -2,37 +2,13 @@ import sys, pygame
 
 
 def check_keydown_events(event, ship):
-    if event.key == pygame.K_e:
-        ship.moving_right = True
-    if event.key == pygame.K_q:
-        ship.moving_left = True
-    if event.key == pygame.K_w:
-        ship.moving_up = True
-    if event.key == pygame.K_s:
-        ship.moving_down = True
-
-    if event.key == pygame.K_d:
-        ship.rotate_right = True
-    if event.key == pygame.K_a:
-        ship.rotate_left = True
+    ship.check_moving_events_keydown(event)
 
     if event.key == pygame.K_SPACE:
         ship.shooting = True
 
 def check_keyup_events(event, ship):
-    if event.key == pygame.K_e:
-        ship.moving_right = False
-    if event.key == pygame.K_q:
-        ship.moving_left = False
-    if event.key == pygame.K_w:
-        ship.moving_up = False
-    if event.key == pygame.K_s:
-        ship.moving_down = False
-
-    if event.key == pygame.K_d:
-        ship.rotate_right = False
-    if event.key == pygame.K_a:
-        ship.rotate_left = False
+    ship.check_moving_events_keyup(event)
 
     if event.key == pygame.K_SPACE:
         ship.shooting = False
@@ -53,6 +29,13 @@ def check_events_game_active(game_mngr, ship, stats):
             check_keydown_events(event, ship)
             if event.key == pygame.K_ESCAPE:
                 stop_game(game_mngr, stats)
+            if event.key == pygame.K_m:
+                game_mngr.switch_moving()
+            if event.key == pygame.K_p:
+                if game_mngr.asters:
+                    game_mngr.asters = False
+                else:
+                    game_mngr.asters = True
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
