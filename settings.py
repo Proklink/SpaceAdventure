@@ -15,7 +15,7 @@ class Settings():
         self.sh_image_path = 'images/ships/Ships3/ship1.png'
         self.sh_image = pygame.image.load(self.sh_image_path)
         
-        self.sh_acceleration = 0.05
+        self.sh_acceleration = 0.01
         self.sh_max_speed = 2
 
         self.sh_angle_speed = 1
