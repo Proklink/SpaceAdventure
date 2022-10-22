@@ -1,15 +1,17 @@
 from ecs.ECS import Processor
 from ecs.ECS import dispatch_event
-from Components.rigid_body import rigid_body
 import pygame, sys
+from Components.movable import directional 
 
 
 class EventDispatcher(Processor):
-    def __init__(self):
+    def __init__(self, id):
         super().__init__()
 
+        self.player_id = id
 
-    def check_events_game_active(self):
+
+    def check_events_game_active(self, dir):
         """Respond to keypresses and mouse events."""
 
         for event in pygame.event.get():
@@ -17,31 +19,50 @@ class EventDispatcher(Processor):
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_d:
-                    dispatch_event("moving_right", True)
+                    if dir:
+                        dispatch_event("rotate_right", True)
+                    else:
+                        dispatch_event("moving_right", True)
                 if event.key == pygame.K_a:
-                    dispatch_event("moving_left", True)
+                    if dir:
+                        dispatch_event("rotate_left", True)
+                    else:
+                        dispatch_event("moving_left", True)
                 if event.key == pygame.K_w:
                     dispatch_event("moving_up", True)
                 if event.key == pygame.K_s:
                     dispatch_event("moving_down", True)
-                if event.key == pygame.K_RIGHT:
-                    dispatch_event("rotate_right", True)
-                if event.key == pygame.K_LEFT:
-                    dispatch_event("rotate_left", True)
+                #чтобы не пересекались с K_d и K_a
+                if not dir:
+                    if event.key == pygame.K_RIGHT:
+                        dispatch_event("rotate_right", True)
+                    if event.key == pygame.K_LEFT:
+                        dispatch_event("rotate_left", True)
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
-                    dispatch_event("moving_right", False)
+                    if dir:
+                        dispatch_event("rotate_right", False)
+                    else:
+                        dispatch_event("moving_right", False)
                 if event.key == pygame.K_a:
-                    dispatch_event("moving_left", False)
+                    if dir:
+                        dispatch_event("rotate_left", False)
+                    else:
+                        dispatch_event("moving_left", False)
                 if event.key == pygame.K_w:
                     dispatch_event("moving_up", False)
                 if event.key == pygame.K_s:
                     dispatch_event("moving_down", False)
-                if event.key == pygame.K_RIGHT:
-                    dispatch_event("rotate_right", False)
-                if event.key == pygame.K_LEFT:
-                    dispatch_event("rotate_left", False)
+                #чтобы не пересекались с K_d и K_a
+                if not dir:
+                    if event.key == pygame.K_RIGHT:
+                        dispatch_event("rotate_right", False)
+                    if event.key == pygame.K_LEFT:
+                        dispatch_event("rotate_left", False)
 
     def process(self):
-        self.check_events_game_active()
+        dir = None
+        if self.world.entity_exists(self.player_id):
+            dir = self.world.try_component(self.player_id, directional)
+        self.check_events_game_active(dir)

@@ -34,23 +34,33 @@ class PlayerController(Processor):
             rotary.current_angle_step = rotary.angle_speed
         else:
             rotary.current_angle_step = 0
-        
-    def _process_movable(self, dir, mov):
-        if dir:
-            mov.direction = dir.current_direction
-        else:
-            xdir = 0
-            ydir = 0
-            if self.moving_right and not self.moving_left:
-                xdir = 1
-            elif not self.moving_right and self.moving_left:
-                xdir = -1
-            if self.moving_up and not self.moving_down:
-                ydir = -1
-            elif not self.moving_up and self.moving_down:
-                ydir = 1
 
-            mov.direction = [xdir, ydir]
+    def _process_directional_movable(self, mov, dir):
+        mov.direction = dir.current_direction
+           
+        if self.moving_up and not self.moving_down:
+            mov.direction[1] *= -1
+            mov.direction[0] *= -1
+        elif not self.moving_up and self.moving_down:
+            mov.direction[1] *= 1
+            mov.direction[0] *= 1
+        else:
+            mov.direction[0] = 0
+            mov.direction[1] = 0
+        
+    def _process_movable(self, mov):
+        xdir = 0
+        ydir = 0
+        if self.moving_right and not self.moving_left:
+            xdir = 1
+        elif not self.moving_right and self.moving_left:
+            xdir = -1
+        if self.moving_up and not self.moving_down:
+            ydir = -1
+        elif not self.moving_up and self.moving_down:
+            ydir = 1
+
+        mov.direction = [xdir, ydir]
 
     def process(self):
         if not self.world.entity_exists(self.player_id): #or not self.world.has_component(self.player_id, controllable):
@@ -63,5 +73,7 @@ class PlayerController(Processor):
 
         if rot:
             self._update_rotation_angle(rot)
-        if mov:
-            self._process_movable(dir, mov)
+        if dir:
+            self._process_directional_movable(mov, dir)
+        else:
+            self._process_movable(mov)
