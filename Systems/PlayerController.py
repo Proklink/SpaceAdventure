@@ -59,9 +59,9 @@ class PlayerController(Processor):
             return
         #так же какой компонент будет при этом использовать флаги перемещения и когда какие кнопки
         #отвечают за движение по x, а какие за повороты
-        mov = self.world.component_for_entity(self.player_id, movable)
-        dir = self.world.component_for_entity(self.player_id, directional)
-        rot = self.world.component_for_entity(self.player_id, rotary)
+        mov = self.world.try_component(self.player_id, movable)
+        dir = self.world.try_component(self.player_id, directional)
+        rot = self.world.try_component(self.player_id, rotary)
 
         if rot:
             self._update_rotation_angle(rot)

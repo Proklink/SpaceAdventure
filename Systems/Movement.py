@@ -1,7 +1,7 @@
 from ecs.ECS import Processor
 from Components.movable import movable
 from Components.renderable import renderable
-from Components.rigid_body import rigit_body
+from Components.rigid_body import rigid_body
 
 
 class Movement(Processor):
@@ -27,27 +27,26 @@ class Movement(Processor):
             rend.rect.centerx = rend.centerx
             rb.collide_rect.centerx = rend.centerx
 
-    def update_collision_with_map(self, SRiNF, mov):
-        # SRiNF = self's rect in next frame
+    def update_collision_with_map(self, CRiNF, mov):
+        # CRiNF = collide rect in next frame
 
-        if self.moving_up or self.moving_down:
-            SRiNF.centery += mov.yshift
-        if self.moving_right or self.moving_left:
-            SRiNF.centerx += mov.xshift
+        if mov.direction[1] != 0:
+            CRiNF.centery += mov.yshift
+        if mov.direction[0] != 0:
+            CRiNF.centerx += mov.xshift
 
         access_to_move_x = True
         access_to_move_y = True
 
-        if SRiNF.bottom >= self.maxy or SRiNF.top <= self.miny:
+        if CRiNF.bottom >= self.maxy or CRiNF.top <= self.miny:
             access_to_move_y = False
-        if SRiNF.left <= self.minx or SRiNF.right >= self.maxx:
+        if CRiNF.left <= self.minx or CRiNF.right >= self.maxx:
             access_to_move_x = False
 
         return access_to_move_x, access_to_move_y
 
     def process(self):
         #возможно, коллизии с картой лучше вынести в другое место
-
-        for ent, (mov, rend, rb) in self.world.get_components(movable, renderable, rigit_body):
+        for ent, (mov, rend, rb) in self.world.get_components(movable, renderable, rigid_body):
             move_x, move_y = self.update_collision_with_map(rb.collide_rect.copy(), mov)
             self.update_position(move_x, move_y, mov, rend, rb)

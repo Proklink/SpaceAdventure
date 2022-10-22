@@ -1,4 +1,5 @@
 import pygame
+from pygame.transform import smoothscale
 
 class Settings():
     def __init__(self):
@@ -14,6 +15,8 @@ class Settings():
         #ship settings start
         self.sh_image_path = 'images/ships/Ships3/ship1.png'
         self.sh_image = pygame.image.load(self.sh_image_path)
+        rect = self.sh_image.get_rect()
+        self.sh_image = smoothscale(self.sh_image, (rect.width / 4, rect.height / 4))
         
         self.sh_acceleration = 0.01
         self.sh_max_speed = 2
@@ -31,7 +34,7 @@ class Settings():
         self.sh_damage = 25
 
         self.sh_init_posx = self.scr_width / 2
-        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height / 2
+        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height / 2 - 10
         #ship settings end
 
         #alien settings start
