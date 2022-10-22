@@ -24,6 +24,10 @@ class EventDispatcher(Processor):
                     dispatch_event("moving_up", True)
                 if event.key == pygame.K_s:
                     dispatch_event("moving_down", True)
+                if event.key == pygame.K_RIGHT:
+                    dispatch_event("rotate_right", True)
+                if event.key == pygame.K_LEFT:
+                    dispatch_event("rotate_left", True)
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
@@ -34,6 +38,10 @@ class EventDispatcher(Processor):
                     dispatch_event("moving_up", False)
                 if event.key == pygame.K_s:
                     dispatch_event("moving_down", False)
+                if event.key == pygame.K_RIGHT:
+                    dispatch_event("rotate_right", False)
+                if event.key == pygame.K_LEFT:
+                    dispatch_event("rotate_left", False)
 
     def process(self):
         self.check_events_game_active()

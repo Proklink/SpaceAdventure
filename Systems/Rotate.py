@@ -16,7 +16,7 @@ class Rotate(Processor):
         if rot.current_angle_step:
             rot.current_angle = (rot.current_angle + rot.current_angle_step) % 360
 
-            rend.image = rotate(rot.original, rot.current_angle)
+            rend.image = rotate(rot.original_image, rot.current_angle)
             rend.rect = rend.image.get_rect(center=rend.rect.center)
 
     def process(self):

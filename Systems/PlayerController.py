@@ -30,9 +30,7 @@ class PlayerController(Processor):
     def _update_rotation_angle(self, rotary):
         if self.rotate_right:
             rotary.current_angle_step = -rotary.angle_speed
-        else:
-            rotary.current_angle_step = 0
-        if self.rotate_left:
+        elif self.rotate_left:
             rotary.current_angle_step = rotary.angle_speed
         else:
             rotary.current_angle_step = 0
