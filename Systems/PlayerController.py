@@ -63,10 +63,9 @@ class PlayerController(Processor):
         mov.direction = [xdir, ydir]
 
     def process(self):
-        if not self.world.entity_exists(self.player_id): #or not self.world.has_component(self.player_id, controllable):
+        if not self.world.entity_exists(self.player_id):
             return
-        #так же какой компонент будет при этом использовать флаги перемещения и когда какие кнопки
-        #отвечают за движение по x, а какие за повороты
+
         mov = self.world.try_component(self.player_id, movable)
         dir = self.world.try_component(self.player_id, directional)
         rot = self.world.try_component(self.player_id, rotary)

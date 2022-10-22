@@ -2,7 +2,7 @@ from ecs.ECS import Processor
 from Components.movable import rotary, directional
 import math
 
-class DirectionalMovement(Processor):
+class DirectionController(Processor):
     def __init__(self):
         super().__init__()
 
