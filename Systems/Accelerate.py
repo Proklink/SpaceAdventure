@@ -14,15 +14,15 @@ class Accelerate(Processor):
         return False
 
     def _update_speed(self, mov, acc):
-        if (mov.direction[0] != 0 or mov.direction[1] != 0):
+        if (acc.acceleration):
             if not self.is_speed_max(mov, acc):
                 mov.speed += acc.acceleration
 
         elif mov.speed:
-            if mov.speed >= -acc.acceleration and mov.speed <= acc.acceleration:
+            if mov.speed >= -acc.base_acceleration and mov.speed <= acc.base_acceleration:
                 mov.speed = 0
             else:
-                mov.speed -= acc.acceleration
+                mov.speed -= acc.base_acceleration
 
     def process(self):
         for ent, (mov, acc) in self.world.get_components(movable, accelerating):

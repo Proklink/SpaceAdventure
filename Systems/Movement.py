@@ -30,9 +30,9 @@ class Movement(Processor):
     def update_collision_with_map(self, CRiNF, mov):
         # CRiNF = collide rect in next frame
 
-        if mov.direction[1] != 0:
+        if mov.yshift != 0:
             CRiNF.centery += mov.yshift
-        if mov.direction[0] != 0:
+        if mov.xshift != 0:
             CRiNF.centerx += mov.xshift
 
         access_to_move_x = True

@@ -7,8 +7,10 @@ class DirectionController(Processor):
         super().__init__()
 
     def _update_direction(self, rot, direct):
-        direct.current_direction[0] = math.sin(math.radians(rot.current_angle))
-        direct.current_direction[1] = math.cos(math.radians(rot.current_angle))
+        direct.direction[0] = math.sin(math.radians(rot.current_angle))
+        direct.direction[1] = math.cos(math.radians(rot.current_angle))
+        direct.move_up_dir[0] = -1 * direct.direction[0]
+        direct.move_up_dir[1] = -1 * direct.direction[1]
 
     def process(self):
         for ent, (rot, direct) in self.world.get_components(rotary, directional):

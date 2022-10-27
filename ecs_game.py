@@ -32,7 +32,7 @@ def run():
     world.add_component(player, renderable(settings.sh_image, settings.sh_init_posx, settings.sh_init_posy))
     world.add_component(player, rigid_body(settings.sh_image.get_rect(center=(settings.sh_init_posx, settings.sh_init_posy)).copy()))
     world.add_component(player, rotary(settings.sh_image.copy(), settings.sh_angle_speed))
-    # world.add_component(player, directional(settings.sh_init_diretion))
+    world.add_component(player, directional(settings.sh_init_diretion))
     world.add_component(player, accelerating(settings.sh_acceleration, settings.sh_max_speed))
 
 
@@ -45,7 +45,7 @@ def run():
     world.add_processor(EventDispatcher(player), 10)
     world.add_processor(Rotate())
     world.add_processor(Accelerate())
-    # world.add_processor(DirectionController())
+    world.add_processor(DirectionController())
 
     set_handler("moving_right", player_contr.right_flag)
     set_handler("moving_left", player_contr.left_flag)

@@ -1,6 +1,6 @@
 from ecs.ECS import Processor
 from Components.controllable import controllable
-from Components.movable import movable, rotary, directional 
+from Components.movable import accelerating, movable, rotary, directional
 
 class PlayerController(Processor):
     def __init__(self, id):
@@ -35,32 +35,44 @@ class PlayerController(Processor):
         else:
             rotary.current_angle_step = 0
 
-    def _process_directional_movable(self, mov, dir):
-        mov.direction = dir.current_direction
-           
+    def _directional_movable(self, mov, dir):
         if self.moving_up and not self.moving_down:
-            mov.direction[1] *= -1
-            mov.direction[0] *= -1
+            mov.direction[1] = dir.move_up_dir[1]
+            mov.direction[0] = dir.move_up_dir[0]
         elif not self.moving_up and self.moving_down:
-            mov.direction[1] *= 1
-            mov.direction[0] *= 1
-        else:
+            mov.direction[1] = dir.direction[1]
+            mov.direction[0] = dir.direction[0]
+        elif mov.speed == 0:
             mov.direction[0] = 0
             mov.direction[1] = 0
         
-    def _process_movable(self, mov):
-        xdir = 0
-        ydir = 0
+        
+    def _const_direction(self, mov):
+        print("_const_direction")
         if self.moving_right and not self.moving_left:
-            xdir = 1
+            mov.direction[0] = 1
         elif not self.moving_right and self.moving_left:
-            xdir = -1
+            mov.direction[0] = -1
+        elif mov.speed == 0:
+            mov.direction[0] = 0
         if self.moving_up and not self.moving_down:
-            ydir = -1
+            mov.direction[1] = -1
         elif not self.moving_up and self.moving_down:
-            ydir = 1
+            mov.direction[1] = 1
+        elif mov.speed == 0:
+             mov.direction[1] = 0
 
-        mov.direction = [xdir, ydir]
+    def _accelerating_movement(self, acc):
+        if self.moving_right or self.moving_left or self.moving_up or self.moving_down:
+            acc.acceleration = acc.base_acceleration
+        else:
+            acc.acceleration = 0
+
+    def _movement(self, mov):
+        if self.moving_right or self.moving_left or self.moving_up or self.moving_down:
+            mov.speed = mov.base_speed
+        else:
+            mov.speed = 0
 
     def process(self):
         if not self.world.entity_exists(self.player_id):
@@ -69,10 +81,15 @@ class PlayerController(Processor):
         mov = self.world.try_component(self.player_id, movable)
         dir = self.world.try_component(self.player_id, directional)
         rot = self.world.try_component(self.player_id, rotary)
+        acc = self.world.try_component(self.player_id, accelerating)
 
         if rot:
             self._update_rotation_angle(rot)
         if dir:
-            self._process_directional_movable(mov, dir)
+            self._directional_movable(mov, dir)
         else:
-            self._process_movable(mov)
+            self._const_direction(mov)
+        if acc:
+            self._accelerating_movement(acc)
+        else:
+            self._movement(mov)

@@ -3,7 +3,7 @@ from dataclasses import dataclass as component
 @component
 class movable:
     def __init__(self, speed, init_direction):
-        self.speed = speed
+        self.speed = 0
         self.base_speed = speed
         self.xshift = 0
         self.yshift = 0
@@ -13,8 +13,9 @@ class movable:
 @component
 class accelerating:
     def __init__(self, acceleration, max_speed):
-        self.acceleration = acceleration
+        self.acceleration = 0
         self.max_speed = max_speed
+        self.base_acceleration = acceleration
 
 @component
 class rotary:
@@ -27,5 +28,7 @@ class rotary:
 @component
 class directional:
      def __init__(self, init_direction):
-        self.init_direction = init_direction
-        self.current_direction = init_direction
+        self.base_direction = init_direction.copy()
+        self.direction = init_direction.copy()
+        self.move_up_dir = init_direction.copy()
+        self.move_down_dir = init_direction.copy()
