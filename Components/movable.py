@@ -1,14 +1,16 @@
 from dataclasses import dataclass as component
+from common.common import sign, direction_vector
 
 @component
 class movable:
     def __init__(self, speed, init_direction):
-        self.speed = 0
+        self.xspeed = 0
+        self.yspeed = 0
         self.base_speed = speed
         self.xshift = 0
         self.yshift = 0
-        self.init_direction = init_direction
-        self.direction = init_direction
+        self.init_direction = init_direction.copy()
+        self.direction = direction_vector(init_direction)
 
 @component
 class accelerating:

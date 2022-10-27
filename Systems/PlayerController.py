@@ -42,24 +42,25 @@ class PlayerController(Processor):
         elif not self.moving_up and self.moving_down:
             mov.direction[1] = dir.direction[1]
             mov.direction[0] = dir.direction[0]
-        elif mov.speed == 0:
+        elif mov.xspeed == 0:
             mov.direction[0] = 0
+        elif mov.yspeed == 0:
             mov.direction[1] = 0
         
         
     def _const_direction(self, mov):
-        print("_const_direction")
         if self.moving_right and not self.moving_left:
             mov.direction[0] = 1
         elif not self.moving_right and self.moving_left:
             mov.direction[0] = -1
-        elif mov.speed == 0:
+        elif mov.xspeed == 0:
             mov.direction[0] = 0
+
         if self.moving_up and not self.moving_down:
             mov.direction[1] = -1
         elif not self.moving_up and self.moving_down:
             mov.direction[1] = 1
-        elif mov.speed == 0:
+        elif mov.yspeed == 0:
              mov.direction[1] = 0
 
     def _accelerating_movement(self, acc):
@@ -69,10 +70,14 @@ class PlayerController(Processor):
             acc.acceleration = 0
 
     def _movement(self, mov):
-        if self.moving_right or self.moving_left or self.moving_up or self.moving_down:
-            mov.speed = mov.base_speed
+        if self.moving_right or self.moving_left:
+            mov.xspeed = mov.base_speed
         else:
-            mov.speed = 0
+            mov.xspeed = 0
+        if self.moving_up or self.moving_down:
+            mov.yspeed = mov.base_speed
+        else:
+            mov.yspeed = 0
 
     def process(self):
         if not self.world.entity_exists(self.player_id):

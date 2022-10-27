@@ -9,9 +9,10 @@ class ShiftController(Processor):
     def _process_speed(self, mov):
         mov.xshift = 0
         mov.yshift = 0
-        if mov.speed != 0:
-            mov.xshift = mov.speed * mov.direction[0]
-            mov.yshift = mov.speed * mov.direction[1]
+        if mov.xspeed != 0:
+            mov.xshift = mov.xspeed * mov.direction[0]
+        if mov.yspeed != 0:
+            mov.yshift = mov.yspeed * mov.direction[1]
 
     def process(self):
         for ent, (mov) in self.world.get_component(movable):
