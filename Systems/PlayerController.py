@@ -42,11 +42,11 @@ class PlayerController(Processor):
         elif not self.moving_up and self.moving_down:
             mov.direction[1] = dir.direction[1]
             mov.direction[0] = dir.direction[0]
-        elif mov.xspeed == 0:
-            mov.direction[0] = 0
-        elif mov.yspeed == 0:
-            mov.direction[1] = 0
-        
+        else:
+            if mov.xspeed == 0:
+                mov.direction[0] = 0
+            if mov.yspeed == 0:
+                mov.direction[1] = 0
         
     def _const_direction(self, mov):
         if self.moving_right and not self.moving_left:
@@ -63,11 +63,23 @@ class PlayerController(Processor):
         elif mov.yspeed == 0:
              mov.direction[1] = 0
 
-    def _accelerating_movement(self, acc):
-        if self.moving_right or self.moving_left or self.moving_up or self.moving_down:
-            acc.acceleration = acc.base_acceleration
+    def _accelerating_directional_movement(self, acc):
+        if self.moving_up or self.moving_down:
+            acc.xacceleration = acc.base_acceleration
+            acc.yacceleration = acc.base_acceleration
         else:
-            acc.acceleration = 0
+            acc.xacceleration = 0
+            acc.yacceleration = 0
+
+    def _accelerating_movement(self, acc):
+        if self.moving_right or self.moving_left:
+            acc.xacceleration = acc.base_acceleration
+        else:
+            acc.xacceleration = 0
+        if self.moving_up or self.moving_down:
+            acc.yacceleration = acc.base_acceleration
+        else:
+            acc.yacceleration = 0
 
     def _movement(self, mov):
         if self.moving_right or self.moving_left:
@@ -95,6 +107,9 @@ class PlayerController(Processor):
         else:
             self._const_direction(mov)
         if acc:
-            self._accelerating_movement(acc)
+            if dir:
+                self._accelerating_directional_movement(acc)
+            else:
+                self._accelerating_movement(acc)
         else:
             self._movement(mov)

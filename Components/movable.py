@@ -1,5 +1,5 @@
 from dataclasses import dataclass as component
-from common.common import sign, direction_vector
+from common.common import direction_vector
 
 @component
 class movable:
@@ -15,7 +15,8 @@ class movable:
 @component
 class accelerating:
     def __init__(self, acceleration, max_speed):
-        self.acceleration = 0
+        self.xacceleration = 0
+        self.yacceleration = 0
         self.max_speed = max_speed
         self.base_acceleration = acceleration
 

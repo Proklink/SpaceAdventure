@@ -11,8 +11,6 @@ class Rotate(Processor):
         super().__init__()
 
     def _update_rotation(self, rot, rend):
-        #rot.current_angle_step надо менять в обработчике событий: для поворота направо current_angle_step < 0
-        #для поворота налево сurrent_angle_step > 0
         if rot.current_angle_step:
             rot.current_angle = (rot.current_angle + rot.current_angle_step) % 360
 
@@ -20,5 +18,5 @@ class Rotate(Processor):
             rend.rect = rend.image.get_rect(center=rend.rect.center)
 
     def process(self):
-        for ent, (mov, rot, rend) in self.world.get_components(movable, rotary, renderable):
+        for ent, (rot, rend) in self.world.get_components(rotary, renderable):
             self._update_rotation(rot, rend)

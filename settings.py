@@ -16,10 +16,10 @@ class Settings():
         self.sh_image_path = 'images/ships/Ships3/ship1.png'
         self.sh_image = pygame.image.load(self.sh_image_path)
         rect = self.sh_image.get_rect()
-        self.sh_image = smoothscale(self.sh_image, (rect.width / 4, rect.height / 4))
+        self.sh_image = smoothscale(self.sh_image, (rect.width / 6, rect.height / 6))
         
         self.sh_acceleration = 0.01
-        self.sh_max_speed = 2
+        self.sh_max_speed = 1
 
         self.sh_angle_speed = 1
         self.sh_init_diretion = [0, -1]
