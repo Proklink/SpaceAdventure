@@ -38,6 +38,8 @@ class EventDispatcher(Processor):
                         dispatch_event("rotate_right", True)
                     if event.key == pygame.K_LEFT:
                         dispatch_event("rotate_left", True)
+                if event.key == pygame.K_SPACE:
+                    dispatch_event("shooting", True)
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_d:
@@ -60,6 +62,8 @@ class EventDispatcher(Processor):
                         dispatch_event("rotate_right", False)
                     if event.key == pygame.K_LEFT:
                         dispatch_event("rotate_left", False)
+                if event.key == pygame.K_SPACE:
+                    dispatch_event("shooting", False)
 
     def process(self):
         dir = None

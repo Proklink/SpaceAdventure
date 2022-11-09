@@ -3,10 +3,10 @@ from common.common import direction_vector
 
 @component
 class movable:
-    def __init__(self, speed, init_direction):
-        self.xspeed = 0
-        self.yspeed = 0
-        self.base_speed = speed
+    def __init__(self, base_speed, init_direction, init_speed = 0):
+        self.xspeed = init_speed
+        self.yspeed = init_speed
+        self.base_speed = base_speed
         self.xshift = 0
         self.yshift = 0
         self.init_direction = init_direction.copy()

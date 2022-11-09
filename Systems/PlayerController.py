@@ -1,6 +1,9 @@
 from ecs.ECS import Processor
 from Components.controllable import controllable
 from Components.movable import accelerating, movable, rotary, directional
+from Components.renderable import renderable
+from Components.rigid_body import rigid_body
+from settings import settings
 
 class PlayerController(Processor):
     def __init__(self, id):
@@ -12,6 +15,8 @@ class PlayerController(Processor):
 
         self.rotate_right = False
         self.rotate_left = False
+
+        self.shooting = False
         self.player_id = id
 
     def right_flag(self, flag):
@@ -26,6 +31,27 @@ class PlayerController(Processor):
         self.rotate_right = flag
     def rotate_left_flag(self, flag):
         self.rotate_left = flag
+    def shooting_flag(self, flag):
+        self.shooting = flag
+
+    def _update_shooting(self):
+        if not self.shooting:
+            return
+        rend = self.world.try_component(self.player_id, renderable)
+        if not rend:
+            return
+        bullet = self.world.create_entity()
+        dir = self.world.try_component(self.player_id, directional)
+        
+        if dir:
+            direction = dir.move_up_dir
+        else:
+            direction = [0, -1]
+
+        bullet_mov = movable(settings.bul_speed, direction.copy(), settings.bul_speed)
+        self.world.add_component(bullet, bullet_mov)
+        self.world.add_component(bullet, renderable(settings.bul_image.copy(), rend.rect.centerx, rend.rect.centery))
+        self.world.add_component(bullet, rigid_body(settings.bul_image.get_rect(center=(rend.rect.centerx, rend.rect.centery)).copy()))
 
     def _update_rotation_angle(self, rotary):
         if self.rotate_right:
@@ -113,3 +139,5 @@ class PlayerController(Processor):
                 self._accelerating_movement(acc)
         else:
             self._movement(mov)
+
+        self._update_shooting()

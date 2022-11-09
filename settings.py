@@ -2,74 +2,76 @@ import pygame
 from pygame.transform import smoothscale
 
 class Settings():
-    def __init__(self):
-        """Initialize the game's settings."""
-        # Screen settings start
-        self.scr_width = 1200
-        self.scr_height = 600
-        self.scr_caption = "Space Adventure"
-        self.scr_background_image_path = 'images/space.jpg'
-        self.scr_image = pygame.image.load(self.scr_background_image_path)
-        # Screen settings end
+    """Initialize the game's settings."""
+    # Screen settings start
+    scr_width = 1200
+    scr_height = 600
+    scr_caption = "Space Adventure"
+    scr_background_image_path = 'images/space.jpg'
+    scr_image = pygame.image.load(scr_background_image_path)
+    # Screen settings end
 
-        #ship settings start
-        self.sh_image_path = 'images/ships/Ships3/ship1.png'
-        self.sh_image = pygame.image.load(self.sh_image_path)
-        rect = self.sh_image.get_rect()
-        self.sh_image = smoothscale(self.sh_image, (rect.width / 6, rect.height / 6))
-        
-        self.sh_acceleration = 0.01
-        self.sh_max_speed = 1
+    #ship settings start
+    sh_image_path = 'images/ships/Ships3/ship1.png'
+    sh_image = pygame.image.load(sh_image_path)
+    rect = sh_image.get_rect()
+    sh_image = smoothscale(sh_image, (rect.width / 6, rect.height / 6))
+    
+    sh_acceleration = 0.01
+    sh_max_speed = 1
 
-        self.sh_angle_speed = 1
-        self.sh_init_diretion = [0, -1]
+    sh_angle_speed = 1
+    sh_init_diretion = [0, -1]
 
-        self.sh_speed = 1
+    sh_speed = 1
 
-        self.sh_max_health = 100
-        self.sh_health_bar_height = 5
-        self.sh_health_bar_shifty = 6
-        self.sh_lives_limit = 3
+    sh_max_health = 100
+    sh_health_bar_height = 5
+    sh_health_bar_shifty = 6
+    sh_lives_limit = 3
 
-        self.sh_damage = 25
+    sh_damage = 25
 
-        self.sh_init_posx = self.scr_width / 2
-        self.sh_init_posy = self.scr_height - self.sh_image.get_rect().height / 2 - 10
-        #ship settings end
+    sh_init_posx = scr_width / 2
+    sh_init_posy = scr_height - sh_image.get_rect().height / 2 - 20
+    #ship settings end
 
-        #alien settings start
-        self.al_image_path = 'images/ships/Ships1/RD1.png'
-        self.al_image = pygame.image.load(self.al_image_path)
-        self.al_width = self.al_image.get_rect().width
-        self.al_height = self.al_image.get_rect().height
+    #alien settings start
+    al_image_path = 'images/ships/Ships1/RD1.png'
+    al_image = pygame.image.load(al_image_path)
+    al_width = al_image.get_rect().width
+    al_height = al_image.get_rect().height
 
-        self.al_init_rotation_angle = 180
+    al_init_rotation_angle = 180
 
-        self.al_max_health = 500
-        self.al_health_height = 5
-        self.al_health_bar_shift = 6
-        #alien settings end
+    al_max_health = 500
+    al_health_height = 5
+    al_health_bar_shift = 6
+    #alien settings end
 
-        #asteroid settings start
-        self.ast_image_path = 'images/ships/Ships1/RD1.png'
-        self.ast_image = pygame.image.load(self.ast_image_path)
-        self.ast_width = self.ast_image.get_rect().width
-        self.ast_height = self.ast_image.get_rect().height
+    #asteroid settings start
+    ast_image_path = 'images/ships/Ships1/RD1.png'
+    ast_image = pygame.image.load(ast_image_path)
+    ast_width = ast_image.get_rect().width
+    ast_height = ast_image.get_rect().height
 
-        self.ast_init_rotation_angle = 180
+    ast_init_rotation_angle = 180
 
-        self.ast_max_health = 25
-        self.ast_health_height = 5
-        self.ast_health_bar_shift = 6
-        self.ast_speed = 1
-        self.ast_damage = 25
-        #alien settings end
+    ast_max_health = 25
+    ast_health_height = 5
+    ast_health_bar_shift = 6
+    ast_speed = 1
+    ast_damage = 25
+    #alien settings end
 
-        #bullet settings start
-        self.bul_width = 8
-        self.bul_height = 8
-        self.bul_color = (255, 10, 10)
-        self.bul_speed = 4
-        self.bul_damage = 25
-        self.bul_image = pygame.Surface((self.bul_width, self.bul_height), pygame.SRCALPHA)
-        #bullet settings end
+    #bullet settings start
+    bul_width = 8
+    bul_height = 8
+    bul_color = (255, 10, 10)
+    bul_speed = 4
+    bul_damage = 25
+    bul_image = pygame.Surface((bul_width, bul_height), pygame.SRCALPHA)
+    pygame.draw.ellipse(bul_image, bul_color, (0, 0, bul_width, bul_height))
+    #bullet settings end
+
+settings = Settings()

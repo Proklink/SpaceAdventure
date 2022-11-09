@@ -1,6 +1,6 @@
 import pygame
 from screen import Screen
-from settings import Settings
+from settings import settings
 from ecs.ECS import World
 from Components.movable import movable, rotary, directional, accelerating
 from Components.renderable import renderable
@@ -14,11 +14,12 @@ from Systems.EventDispatcher import EventDispatcher
 from Systems.DirectionController import DirectionController
 from Systems.Accelerate import Accelerate
 from ecs.ECS import set_handler
+from Systems.PlayerMapCollision import PlayerMapCollision
 
 
 def run():
     pygame.init()
-    settings = Settings()
+    # settings = Settings()
     screen = Screen(settings.scr_width,
                     settings.scr_height,
                     settings.scr_caption,
@@ -32,12 +33,12 @@ def run():
     world.add_component(player, renderable(settings.sh_image, settings.sh_init_posx, settings.sh_init_posy))
     world.add_component(player, rigid_body(settings.sh_image.get_rect(center=(settings.sh_init_posx, settings.sh_init_posy)).copy()))
     world.add_component(player, rotary(settings.sh_image.copy(), settings.sh_angle_speed))
-    # world.add_component(player, directional(settings.sh_init_diretion))
+    world.add_component(player, directional(settings.sh_init_diretion))
     world.add_component(player, accelerating(settings.sh_acceleration, settings.sh_max_speed))
 
 
     # Create some Processor instances, and asign them to be processed.
-    world.add_processor(Movement(0, settings.scr_width, 0, settings.scr_height), 7)
+    world.add_processor(Movement(), 7)
     world.add_processor(Render(screen))
     player_contr = PlayerController(player)
     world.add_processor(player_contr, 9)
@@ -45,7 +46,8 @@ def run():
     world.add_processor(EventDispatcher(player), 10)
     world.add_processor(Rotate())
     world.add_processor(Accelerate())
-    # world.add_processor(DirectionController())
+    world.add_processor(DirectionController())
+    world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 8)
 
     set_handler("moving_right", player_contr.right_flag)
     set_handler("moving_left", player_contr.left_flag)
@@ -53,6 +55,7 @@ def run():
     set_handler("moving_down", player_contr.down_flag)
     set_handler("rotate_right", player_contr.rotate_right_flag)
     set_handler("rotate_left", player_contr.rotate_left_flag)
+    set_handler("shooting", player_contr.shooting_flag)
 
     running = True
     while running:
