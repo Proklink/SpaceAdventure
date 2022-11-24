@@ -13,3 +13,8 @@ class health_bar:
         self.is_top = is_top
         self.shift_from_object = shift_from_object
         self.health_bar_height = health_bar_height
+
+@component
+class damage:
+    def __init__(self, damage):
+        self.damage = damage

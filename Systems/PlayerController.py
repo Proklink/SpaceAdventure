@@ -3,6 +3,8 @@ from Components.controllable import controllable
 from Components.movable import accelerating, movable, rotary, directional
 from Components.renderable import renderable
 from Components.rigid_body import rigid_body
+from Components.missile import missile
+from Components.health import destructible, damage
 from settings import settings
 
 class PlayerController(Processor):
@@ -18,6 +20,9 @@ class PlayerController(Processor):
 
         self.shooting = False
         self.player_id = id
+
+        self.frames_per_bullet = 20
+        self.frames = 0
 
     def right_flag(self, flag):
         self.moving_right = flag
@@ -35,8 +40,11 @@ class PlayerController(Processor):
         self.shooting = flag
 
     def _update_shooting(self):
-        if not self.shooting:
+        if self.frames > 0:
+            self.frames -= 1
+        if not self.shooting or self.frames != 0:
             return
+            
         rend = self.world.try_component(self.player_id, renderable)
         if not rend:
             return
@@ -52,6 +60,10 @@ class PlayerController(Processor):
         self.world.add_component(bullet, bullet_mov)
         self.world.add_component(bullet, renderable(settings.bul_image.copy(), rend.rect.centerx, rend.rect.centery))
         self.world.add_component(bullet, rigid_body(settings.bul_image.get_rect(center=(rend.rect.centerx, rend.rect.centery)).copy()))
+        self.world.add_component(bullet, missile(self.player_id))
+        self.world.add_component(bullet, destructible(25, 25, 1))
+        self.world.add_component(bullet, damage(settings.bul_damage))
+        self.frames = self.frames_per_bullet
 
     def _update_rotation_angle(self, rotary):
         if self.rotate_right:

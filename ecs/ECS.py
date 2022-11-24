@@ -357,6 +357,13 @@ class World:
                 component_types, list(self._get_components(*component_types))
             )
 
+    def get_components_for(self, component_type: _Type[_C], comps: list):
+        entity_db = self._entities
+        comp_db = self._components
+
+        for entity in set.intersection(*[comp_db[component_type]]):
+            comps.append((entity, entity_db[entity][component_type]))
+
     def try_component(self, entity: int, component_type: _Type[_C]) -> _Optional[_C]:
         """Try to get a single component type for an Entity.
 

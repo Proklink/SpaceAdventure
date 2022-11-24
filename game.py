@@ -15,6 +15,9 @@ from Systems.DirectionController import DirectionController
 from Systems.Accelerate import Accelerate
 from ecs.ECS import set_handler
 from Systems.PlayerMapCollision import PlayerMapCollision
+from Systems.Collide import Collide
+from Systems.Damage import Damage
+from Components.health import destructible
 
 
 def run():
@@ -27,8 +30,14 @@ def run():
 
     # Initialize Esper world, and create a "player" Entity with a few Components.
     world = World()
+    damage_controller = Damage(world)
     player = world.create_entity()
-    
+
+    alien = world.create_entity()
+    world.add_component(alien, renderable(settings.al_image, settings.sh_init_posx, settings.sh_init_posy - settings.scr_height / 2))
+    world.add_component(alien, rigid_body(settings.al_image.get_rect(center=(settings.sh_init_posx, settings.sh_init_posy - settings.scr_height / 2)).copy()))
+    world.add_component(alien, destructible(50, 50, 1)) 
+
     world.add_component(player, movable(settings.sh_speed, settings.sh_init_diretion))
     world.add_component(player, renderable(settings.sh_image, settings.sh_init_posx, settings.sh_init_posy))
     world.add_component(player, rigid_body(settings.sh_image.get_rect(center=(settings.sh_init_posx, settings.sh_init_posy)).copy()))
@@ -48,6 +57,7 @@ def run():
     world.add_processor(Accelerate())
     world.add_processor(DirectionController())
     world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 8)
+    world.add_processor(Collide(0, settings.scr_width, 0, settings.scr_height))
 
     set_handler("moving_right", player_contr.right_flag)
     set_handler("moving_left", player_contr.left_flag)
@@ -56,6 +66,7 @@ def run():
     set_handler("rotate_right", player_contr.rotate_right_flag)
     set_handler("rotate_left", player_contr.rotate_left_flag)
     set_handler("shooting", player_contr.shooting_flag)
+    set_handler("missile_entity_collision", damage_controller.missile_entity_collision)
 
     running = True
     while running:
