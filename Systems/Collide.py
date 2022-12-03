@@ -95,6 +95,7 @@ class Collide(Processor):
                     continue
             
             self._entities_collision(rb, entity, comps_and_entities)
+        self.collisions = []
             
 
 

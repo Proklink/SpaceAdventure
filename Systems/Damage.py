@@ -52,7 +52,7 @@ class Damage():
                                  target_entity, target_rb, target_dest, target_dam,
                                  is_x_axe):
         mis_tar = self.world.try_component(entity1, missile)
-        if mis_tar == None or (mis_tar and target_entity == mis_tar.owner):
+        if mis_tar and target_entity == mis_tar.owner:
             return
 
         mov1 = self.world.try_component(entity1, movable)
