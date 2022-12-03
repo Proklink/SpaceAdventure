@@ -31,13 +31,15 @@ class Damage():
     def _speed_projection_module(self, reference_entity_rb, target_entity_rb, reference_entity_movable, is_x_axe):
         vector_between_entities = [target_entity_rb.collide_rect.centerx - reference_entity_rb.collide_rect.centerx,
                                    target_entity_rb.collide_rect.centery - reference_entity_rb.collide_rect.centery]
+        vector_between_entities_module = sqrt(vector_between_entities[0]**2 + vector_between_entities[1]**2)
+        if vector_between_entities_module == 0:
+            return 0
         reference_entity_speed_vector = [0, 0]
         if is_x_axe:
             reference_entity_speed_vector[0] = reference_entity_movable.xspeed * reference_entity_movable.direction.x_sign
         else:
             reference_entity_speed_vector[1] = reference_entity_movable.yspeed * reference_entity_movable.direction.y_sign
         scalar_vectors_product = vector_between_entities[0] * reference_entity_speed_vector[0] + vector_between_entities[1] * reference_entity_speed_vector[1]
-        vector_between_entities_module = sqrt(vector_between_entities[0]**2 + vector_between_entities[1]**2)
 
         return scalar_vectors_product / vector_between_entities_module
 
@@ -45,10 +47,14 @@ class Damage():
     # урон высчитывается как произведение базового урона на модуль проекции 
     # компонента вектора скорости (который направлен на целевую сущность) на вектор направления
     # от центра rigid_body сущности отсчета (entity1) на центр rigid_body целевой сущности(target_entity)
-    #entity1 - сущность которая токает target_entity
+    #entity1 - сущность которая толкает target_entity
     def entities_collision(self, entity1, rb1, dest1, dam1,
                                  target_entity, target_rb, target_dest, target_dam,
                                  is_x_axe):
+        mis_tar = self.world.try_component(entity1, missile)
+        if mis_tar == None or (mis_tar and target_entity == mis_tar.owner):
+            return
+
         mov1 = self.world.try_component(entity1, movable)
         print("entities_collision")
         if (target_dest and dam1 and mov1):

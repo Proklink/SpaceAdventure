@@ -12,6 +12,7 @@ class Collide(Processor):
         self.maxx = maxx
         self.miny = miny
         self.maxy = maxy
+        self.collisions = []
 
     def _missile_map_collision(self, rb, mis_entity):
         if rb.collide_rect.bottom >= self.maxy or rb.collide_rect.top <= self.miny:
@@ -72,12 +73,15 @@ class Collide(Processor):
             collide = taget_rb.collide_rect.colliderect(rb.collide_rect)
             if not collide:
                 continue
+            if (target_entity, entity) in self.collisions:
+                continue
             is_x_axe = self._not_move(target_entity, taget_rb, entity, rb)
             self._damage_possibility_check(target_entity, taget_rb, entity, rb, is_x_axe)
             is_x_axe = self._not_move(entity, rb, target_entity, taget_rb)
             self._damage_possibility_check(entity, rb, target_entity, taget_rb, is_x_axe)
-
-
+            
+            self.collisions.append((target_entity, entity))
+            self.collisions.append((entity, target_entity))
 
     def process(self):
         comps_and_entities = list()
@@ -89,7 +93,6 @@ class Collide(Processor):
             if mis:
                 if self._missile_map_collision(rb, entity):
                     continue
-                # self._missile_entity_collision(mis, rb, entity, comps_and_entities)
             
             self._entities_collision(rb, entity, comps_and_entities)
             
