@@ -14,8 +14,8 @@ class Settings():
     #ship settings start
     sh_image_path = 'images/ships/Ships3/ship1.png'
     sh_image = pygame.image.load(sh_image_path)
-    rect = sh_image.get_rect()
-    sh_image = smoothscale(sh_image, (rect.width / 6, rect.height / 6))
+    sh_rect = sh_image.get_rect()
+    sh_image = smoothscale(sh_image, (sh_rect.width / 6, sh_rect.height / 6))
     
     sh_acceleration = 0.01
     sh_max_speed = 1
@@ -56,15 +56,20 @@ class Settings():
     #asteroid settings start
     ast_image_path = 'images/ships/Ships1/RD1.png'
     ast_image = pygame.image.load(ast_image_path)
+    ast_rect = ast_image.get_rect()
+    ast_image = smoothscale(ast_image, (ast_rect.width / 6, ast_rect.height / 6))
     ast_width = ast_image.get_rect().width
     ast_height = ast_image.get_rect().height
 
     ast_init_rotation_angle = 180
 
+    ast_init_diretion = [0, 1]
+
     ast_max_health = 25
+    ast_live_limit = 1
     ast_health_height = 5
     ast_health_bar_shift = 6
-    ast_speed = 1
+    ast_speed = 0.5
     ast_damage = 25
     #asteroid settings end
 

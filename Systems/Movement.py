@@ -16,13 +16,16 @@ class Movement(Processor):
         if mov.yshift:
             rend.centery += mov.yshift
             rend.rect.centery = rend.centery
-            rb.collide_rect.centery = rend.centery
+            if rb:
+                rb.collide_rect.centery = rend.centery
 
         if mov.xshift:
             rend.centerx += mov.xshift
             rend.rect.centerx = rend.centerx
-            rb.collide_rect.centerx = rend.centerx
+            if rb:
+                rb.collide_rect.centerx = rend.centerx
 
     def process(self):
-        for ent, (mov, rend, rb) in self.world.get_components(movable, renderable, rigid_body):
+        for ent, (mov, rend) in self.world.get_components(movable, renderable):
+            rb = self.world.try_component(ent, rigid_body)
             self.update_position(mov, rend, rb)

@@ -114,8 +114,15 @@ class BulletBuilder(Builder):
 
 
 class EntitiesGenerator:
-    def get_alien(self):
-        pass
+    def add_alien(self, world, posx, posy):
+        alien = world.create_entity()
+
+        world.add_component(alien, renderable(settings.ast_image, posx, posy))
+        world.add_component(alien, rigid_body(settings.ast_image.get_rect(center=(posx, posy)).copy()))
+        world.add_component(alien, destructible(settings.ast_max_health, settings.ast_max_health, settings.ast_live_limit))
+        world.add_component(alien, damage(settings.ast_damage))
+        world.add_component(alien, movable(settings.ast_speed, settings.ast_init_diretion, settings.ast_speed))
+        return alien
 
     def add_static_alien(self, world):
         alien = world.create_entity()
