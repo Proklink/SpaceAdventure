@@ -47,6 +47,10 @@ class Settings():
     al_max_health = 500
     al_health_height = 5
     al_health_bar_shift = 6
+    al_live_limit = 1
+    
+    al_speed = 1
+    al_damage = 25
     #alien settings end
 
     #asteroid settings start
@@ -62,7 +66,7 @@ class Settings():
     ast_health_bar_shift = 6
     ast_speed = 1
     ast_damage = 25
-    #alien settings end
+    #asteroid settings end
 
     #bullet settings start
     bul_width = 8
@@ -72,6 +76,8 @@ class Settings():
     bul_damage = 25
     bul_image = pygame.Surface((bul_width, bul_height), pygame.SRCALPHA)
     pygame.draw.ellipse(bul_image, bul_color, (0, 0, bul_width, bul_height))
+    bul_lives_limit = 1
+    bul_health = 1
     #bullet settings end
 
 settings = Settings()

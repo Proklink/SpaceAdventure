@@ -43,6 +43,11 @@ class Damage():
 
         return scalar_vectors_product / vector_between_entities_module
 
+    def is_mis_owner(self, mis, entity):
+        if mis and entity == mis.owner:
+            return True
+        else:
+            return False
 
     # урон высчитывается как произведение базового урона на модуль проекции 
     # компонента вектора скорости (который направлен на целевую сущность) на вектор направления
@@ -51,8 +56,9 @@ class Damage():
     def entities_collision(self, entity1, rb1, dest1, dam1,
                                  target_entity, target_rb, target_dest, target_dam,
                                  is_x_axe):
-        mis_tar = self.world.try_component(entity1, missile)
-        if mis_tar and target_entity == mis_tar.owner:
+        mis1 = self.world.try_component(entity1, missile)
+        mis_tar = self.world.try_component(target_entity, missile)
+        if self.is_mis_owner(mis1, target_entity) or self.is_mis_owner(mis_tar, entity1):
             return
 
         mov1 = self.world.try_component(entity1, movable)
