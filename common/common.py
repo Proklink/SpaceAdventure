@@ -1,4 +1,4 @@
-
+import threading
 
 def sign(val):
     if val == 0:
@@ -43,3 +43,7 @@ class direction_vector:
     def __setitem__(self, idx, value):
         self._direction[abs(idx) % 2] = value
         self._move_sign[abs(idx) % 2] = sign(value)
+
+
+def timer(duration, handler, *args):
+    threading.Timer(duration, handler, args).start()

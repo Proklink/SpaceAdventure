@@ -60,7 +60,6 @@ class Collide(Processor):
         entity2_dam = self.world.try_component(entity2, damage)
 
         if (entity2_dest and moving_entity_dam):
-            print("entities_collision dest1 and dam2")
             dispatch_event("entities_collision", moving_entity, moving_entity_rb1, moving_entity_dest, moving_entity_dam,
                                                  entity2, rb2, entity2_dest, entity2_dam,
                                                  is_x_axe)

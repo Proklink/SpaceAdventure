@@ -62,7 +62,6 @@ class Damage():
             return
 
         mov1 = self.world.try_component(entity1, movable)
-        print("entities_collision")
         if (target_dest and dam1 and mov1):
             spm = self._speed_projection_module(rb1, target_rb, mov1, is_x_axe)
             calc_damage = dam1.damage * spm

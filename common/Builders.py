@@ -149,7 +149,7 @@ class EntitiesGenerator:
         world.add_component(player, renderable(settings.sh_image, posx, posy))
         world.add_component(player, rigid_body(col_rect))
         world.add_component(player, rotary(settings.sh_image.copy(), settings.sh_angle_speed))
-        world.add_component(player, directional(init_dir))
+        # world.add_component(player, directional(init_dir))
         world.add_component(player, accelerating(settings.sh_acceleration, settings.sh_max_speed))
         world.add_component(player, health_bar(shifty, bar_h, col_rect.top, col_rect.left, col_rect.width))
         world.add_component(player, destructible(health, health, settings.sh_lives_limit))
@@ -158,7 +158,7 @@ class EntitiesGenerator:
         world.add_processor(player_contr, 9)
         world.add_processor(EventDispatcher(player), 10)
         world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 8)
-        world.add_processor(DirectionController())
+        # world.add_processor(DirectionController())
 
         set_handler("moving_right", player_contr.right_flag)
         set_handler("moving_left", player_contr.left_flag)
@@ -169,17 +169,23 @@ class EntitiesGenerator:
         set_handler("shooting", player_contr.shooting_flag)
 
 
-    def add_bullet(self, owner, world):
+    def add_bullet(self, owner, world, fire_direction=None):
+        if not world.entity_exists(owner):
+            return
         rend = world.try_component(owner, renderable)
         if not rend:
             return
         bullet = world.create_entity()
-        dir = world.try_component(owner, directional)
         
-        if dir:
-            direction = dir.move_up_dir
+        
+        if fire_direction:
+            direction = fire_direction
         else:
-            direction = [0, -1]
+            dir = world.try_component(owner, directional)
+            if dir:
+                direction = dir.move_up_dir
+            else:
+                direction = [0, -1]
 
         bullet_mov = movable(settings.bul_speed, direction.copy(), settings.bul_speed)
         world.add_component(bullet, bullet_mov)
