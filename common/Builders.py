@@ -8,7 +8,7 @@ from Components.health import destructible, health_bar, damage
 from Components.missile import missile
 
 from Systems.PlayerController import PlayerController
-from Systems.EventDispatcher import EventDispatcher
+
 from Systems.PlayerMapCollision import PlayerMapCollision
 from Systems.DirectionController import DirectionController
 
@@ -156,7 +156,6 @@ class EntitiesGenerator:
         world.add_component(player, damage(settings.sh_damage))
 
         world.add_processor(player_contr, 9)
-        world.add_processor(EventDispatcher(player), 10)
         world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 8)
         # world.add_processor(DirectionController())
 
@@ -167,6 +166,7 @@ class EntitiesGenerator:
         set_handler("rotate_right", player_contr.rotate_right_flag)
         set_handler("rotate_left", player_contr.rotate_left_flag)
         set_handler("shooting", player_contr.shooting_flag)
+        return player
 
 
     def add_bullet(self, owner, world, fire_direction=None):

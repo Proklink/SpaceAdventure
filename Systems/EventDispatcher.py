@@ -16,8 +16,10 @@ class EventDispatcher(Processor):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                dispatch_event("exit")
             elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    dispatch_event("menu")
                 if event.key == pygame.K_d:
                     if dir:
                         dispatch_event("rotate_right", True)

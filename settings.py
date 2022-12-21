@@ -85,4 +85,19 @@ class Settings():
     bul_health = 1
     #bullet settings end
 
+    #button settings start
+    but_width = 200
+    but_height = 50
+    but_color = (0, 255, 0)
+    but_text_color = (255, 255, 255)
+    but_image = pygame.Surface((but_width, but_height), pygame.SRCALPHA)
+    pygame.draw.rect(but_image, but_color, (0, 0, but_width, but_height))
+    #button settings end
+
+    #menu_background start
+    mb_color = (0, 0, 0)
+    mb_image = pygame.Surface((scr_width, scr_height), pygame.SRCALPHA)
+    pygame.draw.rect(mb_image, mb_color, (0, 0, scr_width, scr_height))
+    #menu_background end
+
 settings = Settings()
