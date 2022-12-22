@@ -4,14 +4,15 @@ from settings import settings
 from common.Builders import entities_generator
 from Components.renderable import renderable
 from Components.movable import movable
-
+# from threading import Timer
+from common.common import Timer
 
 class l_1_w_1(Processor):
     def __init__(self, world):
         super().__init__()
         self.fleet = []
         self.fire_frequency = 1 #sec
-        self.is_async = True
+        self.timer = Timer(self.fire_frequency, self.fire, [])
 
         self.arg_world = world
 
@@ -24,16 +25,17 @@ class l_1_w_1(Processor):
             posy = -settings.ast_height * 1.5
             al = entities_generator.add_alien(world, posx, posy)
             self.fleet.append(al)
-        timer(self.fire_frequency, self.fire)
+
+        self.asyncs(True)
 
     def asyncs(self, value):
         self.is_async = value
         if value:
-            timer(self.fire_frequency, self.fire)
+            self.timer.run()
+        else:
+            self.timer.stop()
 
     def fire(self):
-        if not self.is_async:
-            return
         any_exists = False
         for al in self.fleet:
             if not self.world.entity_exists(al):
@@ -41,7 +43,7 @@ class l_1_w_1(Processor):
             any_exists = True
             entities_generator.add_bullet(al, self.world, settings.ast_init_diretion)
         if any_exists:
-            timer(self.fire_frequency, self.fire)
+            self.timer.run()
 
     def alien_update(self, al):
         rend = self.world.try_component(al, renderable)

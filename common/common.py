@@ -46,3 +46,21 @@ class direction_vector:
 
 def timer(duration, handler, *args):
     threading.Timer(duration, handler, args).start()
+
+class Timer:
+    def __init__(self, duration, handler, args):
+        self.dur = duration
+        self.han = handler
+        self.args = args
+        self.timer = None
+
+    def stop(self):
+        self.timer.cancel()
+        self.timer.join()
+
+    def run(self):
+        if self.timer and self.timer.is_alive():
+            self.timer.run()
+        else:
+            self.timer = threading.Timer(self.dur, self.han, self.args)
+            self.timer.start()
