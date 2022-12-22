@@ -156,7 +156,7 @@ class EntitiesGenerator:
         world.add_component(player, damage(settings.sh_damage))
 
         world.add_processor(player_contr, 9)
-        world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 8)
+        world.add_processor(PlayerMapCollision(0, settings.scr_width, 0, settings.scr_height, player), 7)
         # world.add_processor(DirectionController())
 
         set_handler("moving_right", player_contr.right_flag)

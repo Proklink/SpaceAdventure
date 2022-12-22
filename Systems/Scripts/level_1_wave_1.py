@@ -11,6 +11,7 @@ class l_1_w_1(Processor):
         super().__init__()
         self.fleet = []
         self.fire_frequency = 1 #sec
+        self.is_async = True
 
         self.arg_world = world
 
@@ -25,18 +26,28 @@ class l_1_w_1(Processor):
             self.fleet.append(al)
         timer(self.fire_frequency, self.fire)
 
-    def fire(self):
-        for al in self.fleet:
-            entities_generator.add_bullet(al, self.world, settings.ast_init_diretion)
+    def asyncs(self, value):
+        self.is_async = value
+        if value:
+            timer(self.fire_frequency, self.fire)
 
-        timer(self.fire_frequency, self.fire)
+    def fire(self):
+        if not self.is_async:
+            return
+        any_exists = False
+        for al in self.fleet:
+            if not self.world.entity_exists(al):
+                continue
+            any_exists = True
+            entities_generator.add_bullet(al, self.world, settings.ast_init_diretion)
+        if any_exists:
+            timer(self.fire_frequency, self.fire)
 
     def alien_update(self, al):
         rend = self.world.try_component(al, renderable)
         if rend.rect.centery >= settings.scr_height / 4:
             if self.world.has_component(al, movable):
                 self.world.remove_component(al, movable)
-
 
     def process(self):
         #в этом классе  может возникнуть конфликт объекта world, который в аргументах

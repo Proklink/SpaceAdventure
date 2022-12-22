@@ -28,7 +28,7 @@ class Game:
         self.world.add_processor(Collide(0, settings.scr_width, 0, settings.scr_height), 7)
         self.world.add_processor(Render(screen),1)
         self.world.add_processor(self.game_event_dispatcher, 10)
-        # self.world.add_processor(ScriptLoader())
+        self.world.add_processor(ScriptLoader())
 
         set_handler("missile_entity_collision", self.damage_controller.missile_entity_collision)
         set_handler("entities_collision", self.damage_controller.entities_collision)

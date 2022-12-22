@@ -5,7 +5,6 @@ def sign(val):
         return 0
     return val / abs(val)
 
-
 class direction_vector:
     def __init__(self, init_direction):
         self._direction = [init_direction[0], init_direction[1]]
